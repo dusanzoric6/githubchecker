@@ -1,26 +1,33 @@
+package com.kbc;
+
 import com.jayway.restassured.response.Response;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
+
+import static com.kbc.Steps.getLatestReleaseTagByFullName;
+import static com.kbc.Steps.getReposBySearchParam;
 
 public class Main {
 
     public static void main(String[] args) throws Exception {
 
-        String searchName = args[0];
-        String inputTag = args[1];
+        String searchName = System.getProperty("search");
+        String inputTag = System.getProperty("tag");
 
 //  Search Github for repositories that match the given search string “TestNG”
-        Response allSearchedRepos = Steps.getReposBySearchParam(searchName);
+        Response allSearchedRepos = getReposBySearchParam(searchName);
 
 //  Extracting top repos data from response
         String topRepoName = allSearchedRepos.then().extract().path("items[0].name");
         Integer topRepoStars = allSearchedRepos.then().extract().path("items[0].stargazers_count");
         String topRepoFullName = allSearchedRepos.then().extract().path("items[0].full_name");
 
+        System.out.println("---------------------------------------------------");
         System.out.println("Top repository name : " + topRepoName);
         System.out.println("Star count for top repository : " + topRepoStars);
+        System.out.println("---------------------------------------------------");
 
 //  Search Github for latest tag
-        String latestTag = Steps.getLatestReleaseTagByFullName(topRepoFullName);
+        String latestTag = getLatestReleaseTagByFullName(topRepoFullName);
 
         DefaultArtifactVersion latestTagVersion = new DefaultArtifactVersion(latestTag);
         DefaultArtifactVersion inputTagVersion = new DefaultArtifactVersion(inputTag);

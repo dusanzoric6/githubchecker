@@ -1,9 +1,11 @@
+package com.kbc;
+
 import com.jayway.restassured.response.Response;
 
 import static com.jayway.restassured.RestAssured.get;
 import static com.jayway.restassured.RestAssured.given;
 
-public class Steps {
+class Steps {
 
     static Response getReposBySearchParam(String searchParam) {
         Response response = given().
@@ -23,7 +25,7 @@ public class Steps {
         String tagName = tagsForGivenRepo.then().extract().path("tag_name");
 
         if (tagName == null) {
-            throw new Exception("GutHub API is not publishing releases under this repository");
+            throw new Exception("GutHub API is not publishing releases under repository : "+ topRepoFullName);
         }
         return tagName;
     }
