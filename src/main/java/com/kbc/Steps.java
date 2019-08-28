@@ -2,12 +2,14 @@ package com.kbc;
 
 import com.jayway.restassured.response.Response;
 
+import java.util.Map;
+
 import static com.jayway.restassured.RestAssured.get;
 import static com.jayway.restassured.RestAssured.given;
 
 class Steps {
 
-    static Response getReposBySearchParam(String searchParam) {
+    static Map getTopRepoData(String searchParam) {
         Response response = given().
                 param("q", searchParam).
                 param("sort", "stars").
@@ -15,18 +17,25 @@ class Steps {
                 when().
                 get("https://api.github.com/search/repositories");
 
-        return response;
+//  Extracting top repos data from response
+        String topRepoName = response.then().extract().path("items[0].name");
+        Integer topRepoStars = response.then().extract().path("items[0].stargazers_count");
+        String topRepoFullName = response.then().extract().path("items[0].full_name");
+
+        return Map.of(
+                "name", topRepoName,
+                "stars", topRepoStars,
+                "fullName", topRepoFullName
+        );
     }
 
     static String getLatestReleaseTagByFullName(String topRepoFullName) throws Exception {
         Response tagsForGivenRepo = get("https://api.github.com/repos/" + topRepoFullName + "/releases/latest");
-
-//  extracting latest tag name
-        String tagName = tagsForGivenRepo.then().extract().path("tag_name");
-
-        if (tagName == null) {
-            throw new Exception("GutHub API is not publishing releases under repository : "+ topRepoFullName);
+        if (tagsForGivenRepo.statusCode() == 404) {
+            throw new Exception("GutHub API is not publishing releases under owner/repository : " + topRepoFullName);
         }
-        return tagName;
+
+        //  extracting latest tag name
+        return tagsForGivenRepo.then().extract().path("tag_name");
     }
 }
