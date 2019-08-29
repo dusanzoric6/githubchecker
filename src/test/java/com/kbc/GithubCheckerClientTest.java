@@ -10,7 +10,7 @@ import static org.codehaus.plexus.util.StringUtils.contains;
 import static org.testng.Assert.*;
 
 
-class GithubCheckerClientTest {
+public class GithubCheckerClientTest {
 
     private GithubCheckerClient githubCheckerClient = new GithubCheckerClient();
 
