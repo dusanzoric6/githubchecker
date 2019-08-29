@@ -14,7 +14,7 @@ public class GithubChecker {
     }
 
     public void start(String searchString, String inputTag) {
-        //  Search Github for repositories that match the given search string “TestNG”
+        //  Search Github for repo with the most stars that match the given search string
         Map<String, Object> topRepo = githubCheckerClient.getReposBySearchParam(searchString);
 
         System.out.println("**************************************************************************************************************************");

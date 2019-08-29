@@ -1,13 +1,14 @@
 package com.kbc;
 
 import com.kbc.client.GithubCheckerClient;
-import org.junit.jupiter.api.Test;
+import org.testng.annotations.Test;
 
 import java.util.Map;
 import java.util.UUID;
 
-import static org.apache.commons.lang3.StringUtils.contains;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.codehaus.plexus.util.StringUtils.contains;
+import static org.testng.Assert.*;
+
 
 class GithubCheckerClientTest {
 
@@ -16,7 +17,6 @@ class GithubCheckerClientTest {
     @Test
     void getReposBySearchParam() {
         String searchString = "junit";
-
         Map<String, Object> response = githubCheckerClient.getReposBySearchParam(searchString);
 
         assertTrue(contains((String) response.get("name"), searchString));
@@ -25,27 +25,20 @@ class GithubCheckerClientTest {
     }
 
     @Test
-    void getReposBySearchParamNotFound() {
-        String nonExistingRepoName = UUID.randomUUID().toString();
-        IllegalArgumentException exception =
-                assertThrows(IllegalArgumentException.class, () -> githubCheckerClient.getReposBySearchParam(nonExistingRepoName));
-
-        assertEquals("Repository is not found by search string: " + nonExistingRepoName, exception.getMessage());
+    public void getTest() {
+        String nonExistingRepo = UUID.randomUUID().toString();
+        assertThrows(IllegalArgumentException.class, () -> githubCheckerClient.getReposBySearchParam(nonExistingRepo));
     }
+
 
     @Test
     void getLatestReleaseTagByFullName() {
-        String latestTag = githubCheckerClient.getLatestReleaseTagByFullName("junit-team/junit5");
-
+        String latestTag = githubCheckerClient.getLatestReleaseTagByFullName("SeleniumHQ/selenium");
         assertNotNull(latestTag);
     }
 
     @Test
     void getLatestReleaseTagByFullNameNotFound() {
-        IllegalStateException exception =
-                assertThrows(IllegalStateException.class, () -> githubCheckerClient.getLatestReleaseTagByFullName("dusanzoric6/stolarija"));
-
-        assertEquals("GutHub API is not publishing releases under this repository", exception.getMessage());
-
+        assertThrows(IllegalStateException.class, () -> githubCheckerClient.getLatestReleaseTagByFullName("cbeust/testng"));
     }
 }

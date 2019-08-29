@@ -9,8 +9,8 @@ import static com.jayway.restassured.RestAssured.given;
 
 public class GithubCheckerClient {
 
-    private static final String REPOS_URL = "https://api.github.com/search/repositories";
-    private static final String REPO_INFO_URL = "https://api.github.com/repos/%s/releases/latest";
+    private static final String REPOS_SEARCH_URL = "https://api.github.com/search/repositories";
+    private static final String REPO_LATEST_RELEASE = "https://api.github.com/repos/%s/releases/latest";
 
     public Map<String, Object> getReposBySearchParam(String searchString) {
         Response response = given()
@@ -18,9 +18,9 @@ public class GithubCheckerClient {
                 .param("sort", "stars")
                 .param("order", "desc")
                 .when()
-                .get(REPOS_URL);
+                .get(REPOS_SEARCH_URL);
 
-        if (Integer.parseInt(response.then().extract().path("total_count").toString()) == 0) {
+        if ((Integer) response.then().extract().path("total_count") == 0) {
             throw new IllegalArgumentException("Repository is not found by search string: " + searchString);
         }
 
@@ -37,7 +37,7 @@ public class GithubCheckerClient {
     }
 
     public String getLatestReleaseTagByFullName(String topRepoFullName) {
-        Response response = get(String.format(REPO_INFO_URL, topRepoFullName));
+        Response response = get(String.format(REPO_LATEST_RELEASE, topRepoFullName));
 
         if (response.statusCode() == 404) {
             throw new IllegalStateException("GutHub API is not publishing releases under this repository");
