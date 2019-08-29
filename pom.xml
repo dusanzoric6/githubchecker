@@ -15,6 +15,12 @@
         <testNg.version>6.14.3</testNg.version>
         <rest-assured.version>2.9.0</rest-assured.version>
         <jaxb-api.version>2.3.0</jaxb-api.version>
+        <maven-artifact.version>3.0.3</maven-artifact.version>
+
+        <java.version>10</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
@@ -32,11 +38,12 @@
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>${testNg.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-artifact</artifactId>
-            <version>3.0.3</version>
+            <version>${maven-artifact.version}</version>
         </dependency>
     </dependencies>
 
