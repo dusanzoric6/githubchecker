@@ -12,5 +12,6 @@ Application does following:
 Execution
 -------------
 ```
- mvn clean package exec:java -Dexec.mainClass="com.kbc.Main" -Dsearch=selenium -Dtag=selenium-3.141.59
+ mvn exec:java -D"exec.mainClass"="com.kbc.Main" -Dsearch="selenium" -Dtag="selenium-3.141.59"
 ```
+
